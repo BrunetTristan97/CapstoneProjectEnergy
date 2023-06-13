@@ -42,6 +42,13 @@ Suivant la méthode MLOPS, nous allons, étudier et transformer les données, co
 - `   p(t+1)    `  : valeur suivante uniquement lorsqu'il y'a changement de classe (output)
 - `  out/classe` : etat courant de l'appareil (5 etats possibles)  
 
+
+## **Modele de Baseline**
+Apres avoir appplique la sliding windows, on calcul les performances de modeles sans toutefois fair eun traitement quelconque.
+
+- XGBoost pour tester le modele de ML
+- RNN (lstm) pour tester le modele de DML
+
 <br/>
 <br/>
 <br/>
