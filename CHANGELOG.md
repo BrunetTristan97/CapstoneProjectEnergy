@@ -3,6 +3,11 @@ Ce fichier contient les changements apportes au projets Ecoenergy capstone
  
 Version 1.0.0 (01-05-2023)
 ## **New**
+- Entrainement des modeles de BASELINE avec les donnees sans faire un quelconque traitement (juste la sliding window):
+    * XGBoost pour le ML
+    * RNN (lstm) pour le DML
+
+    **Note:** Pour `SimulatedDatasset.csv`, certains equipements ne possendent pas toutes classes apres qu'on les ait filtre et groupe, pour ceux la, aucun traitement n'a ete fait.
 - creation des colonnes selon le mecanisme de la fenetre (sliding window) pour chaque fenetre:
     * `   Occup 1 ` , ` Occu 2 ` , ` Occup 3 `: etat du capteur selon la colonne **_occupancy_** sur 03 valeurs consecutives
     * `   Power 1 ` , ` Power 2` , ` Power 3   `: valeur de la lecture de la puissance selon la colonne **_power_** sur 03 valeurs consecutives
