@@ -1,10 +1,14 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from keras.callbacks import Callback,ModelCheckpoint
+from keras.models import Sequential,load_model
+from keras.layers import Dense, Dropout
+from keras.wrappers.scikit_learn import KerasClassifier
+import keras.backend as K
 
 # fonction pour creer la sliding windows
-
-def slide_window(dataset, window_size=7):
+def slide_window(dataset, window_size=3):
     oc1, oc2, oc3, p1, p2, p3, pt01, pt02, pt03 , ptn01, ptn02, ptn03 , pt11, pt22, ptn33 , ptn11, ptn22, ptn33 ,cl1, cl2, cl3 = [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []
     y1 = []
 
@@ -41,12 +45,6 @@ def slide_window(dataset, window_size=7):
     return np.asarray(input).astype(np.float32) , np.asarray(output).astype(np.float32)
 
 
-from keras.callbacks import Callback,ModelCheckpoint
-from keras.models import Sequential,load_model
-from keras.layers import Dense, Dropout
-from keras.wrappers.scikit_learn import KerasClassifier
-import keras.backend as K
-
 # fonction pour calculer le score
 def get_f1(y_true, y_pred): #taken from old keras source code
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
@@ -57,7 +55,7 @@ def get_f1(y_true, y_pred): #taken from old keras source code
     f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
     return f1_val
 
-# Normalisation avec stateful:
+# Normalisation :
 
 ## classe stateful
 class StatefulScaler():
@@ -85,11 +83,11 @@ class StatefulScaler():
         self.stateful_mean = self.data_mean
 
 ## normalisation avec stateful pour le modele de DML
-class Generateur(tf.keras.utils.Sequence):
+class Generateur_sc(tf.keras.utils.Sequence):
 
     def __init__(self, dataset, batch_size=8, window_size=3):
 
-        self.X , self.y = dataset.drop('class_state', axis=1).to_numpy().astype(np.float32), np.asarray(tf.one_hot(dataset['class_state'], depth=5)).astype(np.float32)
+        self.X , self.y = dataset.to_numpy().astype(np.float32), np.asarray(tf.one_hot(dataset['class_state'], depth=5)).astype(np.float32) #.drop('class_state', axis=1)
         
         self.batch_size = batch_size
         self.window_size = window_size
@@ -122,6 +120,8 @@ class Generateur(tf.keras.utils.Sequence):
             # print(f"--{batch_x[:, :, 2]}")
             batch_x[:, :, 3] = self.t_back_scaler.normalize(batch_x[i, :, 3])
             # print(f"--{batch_x[:, :, 1]}")
+            batch_x[:, :, 4] = batch_x[i, :, 4]
+            # print(f"--{batch_x[:, :, 1]}")
 
         return np.asarray(batch_x).astype(np.float32) , np.asarray(batch_y).astype(np.float32)
 
@@ -143,7 +143,7 @@ class DataProcessing():
 
     def __init__(self, dataset, window_size=3):
 
-        self.X , self.y = dataset.drop('class_state', axis=1).to_numpy().astype(np.float32), np.asarray(dataset['class_state'])
+        self.X , self.y = dataset.to_numpy().astype(np.float32), np.asarray(dataset['class_state']).astype(np.float32) # .drop('class_state', axis=1)
                 
         self.window_size = window_size
 
@@ -164,8 +164,8 @@ class DataProcessing():
 
         print(f"---\nLes donnees etudiees")
         
-        print(f"La shpae des inputs {batch_x.shape}")
-        print(f"La shape des outputs {batch_y.shape}")
+        print(f"La shape des inputs  : {batch_x.shape}")
+        print(f"La shape des outputs : {batch_y.shape}")
         print("*******************************************\n")
         
         
@@ -173,44 +173,46 @@ class DataProcessing():
          
 
         for i in range(len(batch_x)):
-        # for i in range(20):
+        # for i in range(5): # pour le test sur quelques fenetres
         
-          print(f"Les valeurs de la fenetre -->\n{batch_x[i]}\n")
-          print("%%%%%%%%%%%%%%%%%%%%%  DEBUT  %%%%%%%%%%%%%%%%%%%%\n")
+        #   print(f"Les valeurs a normaliser(la fenetre) -->\n{batch_x[i]}")
+        #   print("%%%%%%%%%%%%%%%%%%%%%  DEBUT  %%%%%%%%%%%%%%%%%%%%\n")
 
               # pour occupancy
           tmp0 = batch_x[i, :, 0]
-          print(tmp0)
+        #   print(tmp0)
 
                 # pour la Power
           tmp1 = self.t_scaler.normalize_window(batch_x[i, :, 1])   # batch_x[i, :, 1] #
-          print(tmp1)             
+        #   print(tmp1)             
           
 
                 # pour Pt+1
           tmp2 = self.t_fwd_scaler.normalize_window(batch_x[i, :, 2])  #  batch_x[i, :, 2] # 
-          # print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-          print(tmp2)  
+        #   print(tmp2)  
 
                 # pour Pt-1
           tmp3 = self.t_back_scaler.normalize_window(batch_x[i, :, 3])  #  batch_x[i, :, 3] # 
-          # print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
-          print(tmp3)  
+        #   print(tmp3)  
+
+                # pour le out de la phase precedente
+          tmp4 = batch_x[i, :, 4]  #  batch_x[i, :, 3] # 
+        #   print(tmp4)  
 
           # print(batch_y[i])
           # print("=================")
-          print()
+        #   print()
 
-          input = np.concatenate([ tmp0 , tmp1 , tmp2 , tmp3 ] )
-          input = np.asarray(input).astype(np.float32) 
-          input_features.append(input)
+          input = np.concatenate([ tmp0 , tmp1 , tmp2 , tmp3 , tmp4 ] )
+          input = np.asarray(input).astype(np.float32) # les features pour une fenetre specifique
+          input_features.append(input) # les inputs de toute la batch
 
           # print(tmp0.shape)
           # print(tmp1.shape)
           # print(tmp2.shape)
           # print(tmp3.shape)
-          print(input)
-          print("%%%%%%%%%%%%%%%%%%%%%%%%%  FIN  %%%%%%%%%%%%\n\n")
+        #   print(input)
+        #   print("%%%%%%%%%%%%%%%%%%%%%%%%%  FIN  %%%%%%%%%%%%\n\n")
           
           
 
@@ -222,11 +224,58 @@ class DataProcessing():
         batch_x, batch_y = batch
         X, y = [], []
 
-        for i in range(batch_x.shape[0]):
+        for i in range(batch_x.shape[0] - timestep ):
             if i <= batch_x.shape[0] - timestep:
-                y.append(batch_y[i+(timestep // 2) ])
-                X.append(batch_x[i:i+timestep, :])
-        # print(X)
+                y.append(batch_y[i + timestep ])
+                X.append(batch_x[i : i + timestep, :]) 
+                 
+
 
         return np.asarray(X).astype(np.float32), np.asarray(y).astype(np.float32)
     
+## normalisation avec coef de variance pour le modele de DML
+class Generateur_cv(tf.keras.utils.Sequence):
+
+    def __init__(self, dataset, batch_size=8, window_size=3):
+
+        self.X , self.y = dataset.to_numpy().astype(np.float32), np.asarray(tf.one_hot(dataset['class_state'], depth=5)).astype(np.float32) #.drop('class_state', axis=1)
+        
+        self.batch_size = batch_size
+        self.window_size = window_size
+       
+       
+    def __len__(self):
+        return (self.X.shape[0] - self.window_size + 1) // self.batch_size
+
+    def __getitem__(self, idx):
+
+        batch_x = self.X[ (idx * self.batch_size) : (idx + 1) * self.batch_size + self.window_size - 1, : ]
+        batch_y = self.y[ (idx * self.batch_size) : (idx + 1) * self.batch_size + self.window_size - 1, : ]
+
+        batch_x, batch_y = self.slide_window([batch_x, batch_y])
+        
+        # Normalisation de P(t), P(t) - P(t-1) et P(t) - P(t+1)
+        for i in range(self.batch_size):
+            batch_x[:, :, 1] = ( np.std(batch_x[i, :, 1]) / (np.mean(batch_x[i, :, 1]) + 1e-7)) * ( ( np.max(batch_x[i, :, 1]) - np.min(batch_x[i, :, 1]) ) /1000 )
+            # print(f"--{batch_x[:, :, 1]}")
+            batch_x[:, :, 2] = ( np.std(batch_x[i, :, 2]) / (np.mean(batch_x[i, :, 2]) + 1e-7)) * ( ( np.max(batch_x[i, :, 2]) - np.min(batch_x[i, :, 2]) ) /1000 )
+            # print(f"--{batch_x[:, :, 2]}")
+            batch_x[:, :, 3] = ( np.std(batch_x[i, :, 3]) / (np.mean(batch_x[i, :, 3]) + 1e-7)) * ( ( np.max(batch_x[i, :, 3]) - np.min(batch_x[i, :, 3]) ) /1000 )
+            # print(f"--{batch_x[:, :, 1]}")
+            batch_x[:, :, 4] = batch_x[i, :, 4]
+            # print(f"--{batch_x[:, :, 1]}")
+
+        return np.asarray(batch_x).astype(np.float32) , np.asarray(batch_y).astype(np.float32)
+
+    def slide_window(self, batch, timestep=3):
+
+        batch_x, batch_y = batch
+
+        X, y = [], []
+        
+        for i in range(batch_x.shape[0]):
+            if i <= batch_x.shape[0] - timestep:
+                y.append(batch_y[i+(timestep // 2) , :])
+                X.append(batch_x[i:i+timestep, :])
+
+        return np.asarray(X).astype(np.float32), np.asarray(y).astype(np.float32)
