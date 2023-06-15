@@ -1,29 +1,8 @@
 import tensorflow as tf
 import numpy as np
+import pandas as pd
 
-class StatefulScaler():
-    def __init__(self, epsilon, initial_mean = 0): # e.g. epsilons: {1: 0.1, 2: 0.9}
-        self.epsilon = epsilon
-        self.stateful_mean = initial_mean
-        self.data_mean = initial_mean
-
-    def normalize(self, fenetre, update_mean = True):
-
-        if update_mean:
-            self.stateful_mean = (1-self.epsilon) * self.stateful_mean + (self.data_mean * self.epsilon)
-        
-        factor = (self.stateful_mean-self.data_mean) / (self.data_mean + 1e-7)
-        fenetre_norm = (fenetre - fenetre.min()) / ((fenetre.max() - fenetre.min()) + 1e-7) # Ajouter 1e-7 a la moyenne pour éviter la division par 0
-        fenetre_norm = fenetre_norm * factor
-        
-        return fenetre_norm
-
-    def normalize_window(self, window):
-        fenetre_norm = np.asarray([self.normalize(window[i]) for i in range(window.shape[0])]).astype(np.float32)
-        return fenetre_norm
-
-    def reset_stateful_mean(self):
-        self.stateful_mean = self.data_mean
+from stateful_scaler import StatefulScaler
 
 class Generateur(tf.keras.utils.Sequence):
 
@@ -74,3 +53,5 @@ class Generateur(tf.keras.utils.Sequence):
                 X.append(batch_x[i:i+timestep, :])
 
         return np.asarray(X).astype(np.float32), np.asarray(y).astype(np.float32)
+
+generateur = Generateur([])
