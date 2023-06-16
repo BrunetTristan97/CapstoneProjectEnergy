@@ -204,10 +204,6 @@ class DataProcessing():
           # print(batch_y[i])
           # print("=================")
         #   print()
-            self.t_scaler.reset_stateful_mean()
-            self.t_fwd_scaler.reset_stateful_mean()
-            self.t_back_scaler.reset_stateful_mean()
-
           input = np.concatenate([ tmp0 , tmp1 , tmp2 , tmp3 , tmp4 ] )
           input = np.asarray(input).astype(np.float32) # les features pour une fenetre specifique
           input_features.append(input) # les inputs de toute la batch
@@ -218,7 +214,10 @@ class DataProcessing():
           # print(tmp3.shape)
         #   print(input)
         #   print("%%%%%%%%%%%%%%%%%%%%%%%%%  FIN  %%%%%%%%%%%%\n\n")
-          
+
+        self.t_scaler.reset_stateful_mean()
+        self.t_fwd_scaler.reset_stateful_mean()
+        self.t_back_scaler.reset_stateful_mean()      
           
 
         return np.asarray(input_features).astype(np.float32) , np.asarray(batch_y).astype(np.float32)
