@@ -66,10 +66,12 @@ class StatefulScaler():
 
     def normalize(self, fenetre, update_mean = True):
 
+        mean = np.mean(fenetre)
+
         if update_mean:
-            self.stateful_mean = (1-self.epsilon) * self.stateful_mean + (self.data_mean * self.epsilon)
+            self.stateful_mean = (1-self.epsilon) * self.stateful_mean + (mean * self.epsilon)
         
-        factor = (self.stateful_mean-self.data_mean) / (self.data_mean + 1e-7)
+        factor = (self.stateful_mean-mean) / (mean + 1e-7)
         fenetre_norm = (fenetre - fenetre.min()) / ((fenetre.max() - fenetre.min()) + 1e-7) # Ajouter 1e-7 a la moyenne pour éviter la division par 0
         fenetre_norm = fenetre_norm * factor
         
