@@ -24,6 +24,19 @@ export  function AuthProvider({children}) {
       return auth.signOut()
     }
 
+    function resetPassword(email){
+      return auth.sendPasswordResetEmail(email)
+    }
+
+    function updateEmail(email){
+      return currentUser.updateEmail(email)
+    }
+
+    function updatePassworld(password){
+      return currentUser.updatePassword(password)
+    }
+    
+
     useEffect(()=>{
         const unsuscribe =  auth.onAuthStateChanged(user => {
             setCurrentUser(user)
@@ -33,11 +46,18 @@ export  function AuthProvider({children}) {
         return unsuscribe
     }, [])
 
+    const appName = ["Prediction de l' etat de votre machine a laver","Prediction de l' état de votre Poele électrique","Prediction de l' état de votre Télévision"]
+
     const value = {
         currentUser,
         login,
         logout,
-        signup
+        signup,
+        resetPassword,
+        updateEmail,
+        updatePassworld,
+        appName
+
     }
   return (
     <AuthContext.Provider value={value}>

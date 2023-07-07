@@ -1,30 +1,29 @@
 import React, {useRef, useState} from 'react'
 import { Card, Form, Button, Alert  } from 'react-bootstrap'
 import { useAuth } from '../context/AuthContext'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, } from 'react-router-dom'
 import ConnectionBody from './ConnectionBody'
 
-
-export default function Login() {
+export default function ForgotPassword() {
 
     const emailRef = useRef()
-    const passwordRef = useRef()
-    const {login} = useAuth()
+    const {resetPassword} = useAuth()
     const [error, setError] = useState('')
+    const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
-    const history = useNavigate()
 
     async function handleSubmit(e){
         e.preventDefault();
 
         try {
             setError('')
+            setMessage('')
             setLoading(true)
-            await login(emailRef.current.value, passwordRef.current.value )
-            history('/Appareils/1')
+            await resetPassword(emailRef.current.value )
+            setMessage('Verifiez vos emails')
         
         } catch (error) {
-            setError('Erreur lors de la connection')
+            setError('Erreur de reinitialisation du MDP')
             setLoading(false)
         }
     }
@@ -33,21 +32,19 @@ export default function Login() {
     <ConnectionBody>
      <Card>
         <Card.Body>
-            <h2 className="text-center mb-4">connectez-vous</h2>
+            <h2 className="text-center mb-4">Reinitialiser votre mot de passe</h2>
             {error && <Alert variant="danger">{error}</Alert>}
+            {message && <Alert variant="success">{message}</Alert>}
             <Form onSubmit={handleSubmit}>
                 <Form.Group id="email">
                     <Form.Label>Email</Form.Label>
                     <Form.Control ref={emailRef} type="email" required/>
                 </Form.Group>
-                <Form.Group id="password">
-                    <Form.Label>Mot de passe</Form.Label>
-                    <Form.Control ref={passwordRef} type="password" required/>
-                </Form.Group>
-                <Button disabled={loading} className="w-100 mt-4" type="submit">Log In</Button>
+               
+                <Button disabled={loading} className="w-100 mt-4" type="submit">Reinitialiser mot de passe</Button>
             </Form>
             <div className='w-100 text-center mt-3'>
-              <Link to="/forgot-password">Mot de passe oublié?</Link>
+              <Link to="/">connectez vous ?</Link>
             </div>
         </Card.Body>
       </Card>
