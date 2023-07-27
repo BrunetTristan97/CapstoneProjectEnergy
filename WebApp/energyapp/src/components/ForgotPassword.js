@@ -30,7 +30,7 @@ export default function ForgotPassword() {
    
   return (
     <ConnectionBody>
-     <Card>
+     <Card className="shadow">
         <Card.Body>
             <h2 className="text-center mb-4">Reinitialiser votre mot de passe</h2>
             {error && <Alert variant="danger">{error}</Alert>}

@@ -13,7 +13,7 @@ const Body = ({ children }) => {
     {currentUser ? ( 
         <>
             <Menu/>
-            <Container className=" align-items-center justify-content-center" style={{width:'200vh'}}>
+            <Container className=" align-items-center justify-content-center">
             {children}
             </Container>
         </>

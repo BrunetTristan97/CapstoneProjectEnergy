@@ -31,7 +31,7 @@ export default function Login() {
    
   return (
     <ConnectionBody>
-     <Card>
+     <Card className="shadow">
         <Card.Body>
             <h2 className="text-center mb-4">connectez-vous</h2>
             {error && <Alert variant="danger">{error}</Alert>}

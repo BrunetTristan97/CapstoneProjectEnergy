@@ -23,8 +23,6 @@ export default function VisuelPrediction({ textToDisplay }) {
             {
               showTable ? ' effacer et faire une nouvelle prediction'  : ' faire une prediction sur les 10 dernieres valeur'
             }
-            
-            
             </button>
           {showTable && (
             
@@ -35,9 +33,6 @@ export default function VisuelPrediction({ textToDisplay }) {
                   <th scope="col">#</th>
                   <th scope="col">Occupation</th>
                   <th scope="col">consomation a l'instant (t)</th>
-                  <th scope="col">Consomation normalisée</th>
-                  <th scope="col">difference entre t et (t+1)</th>
-                  <th scope="col">difference entre t et (t-1)</th>
                 </tr>
               </thead>
               <tbody>
@@ -45,15 +40,9 @@ export default function VisuelPrediction({ textToDisplay }) {
                   <th scope="row">1</th>
                   <td>0</td>
                   <td>0</td>
-                  <td>-0,22789</td>
-                  <td>-60</td>
-                  <td>0</td>
                 </tr>
                 <tr>
                   <th scope="row">2</th>
-                  <td>0</td>
-                  <td>60</td>
-                  <td>-0,19456</td>
                   <td>0</td>
                   <td>60</td>
                 </tr>
@@ -61,65 +50,6 @@ export default function VisuelPrediction({ textToDisplay }) {
                   <th scope="row">3</th>
                   <td>1</td>
                   <td>60</td>
-                  <td>-0,19456</td>
-                  <td>60</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <th scope="row">4</th>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>-0,22789</td>
-                  <td>-60</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <th scope="row">5</th>
-                  <td>0</td>
-                  <td>60</td>
-                  <td>-0,19456</td>
-                  <td>0</td>
-                  <td>60</td>
-                </tr>
-                <tr>
-                  <th scope="row">6</th>
-                  <td>1</td>
-                  <td>60</td>
-                  <td>-0,19456</td>
-                  <td>60</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <th scope="row">7</th>
-                  <td>0</td>
-                  <td>0</td>
-                  <td>-0,22789</td>
-                  <td>-60</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <th scope="row">8</th>
-                  <td>0</td>
-                  <td>60</td>
-                  <td>-0,19456</td>
-                  <td>0</td>
-                  <td>60</td>
-                </tr>
-                <tr>
-                  <th scope="row">9</th>
-                  <td>1</td>
-                  <td>60</td>
-                  <td>-0,19456</td>
-                  <td>60</td>
-                  <td>0</td>
-                </tr>
-                <tr>
-                  <th scope="row">10</th>
-                  <td>1</td>
-                  <td>60</td>
-                  <td>-0,19456</td>
-                  <td>60</td>
-                  <td>0</td>
                 </tr>
               </tbody>
             </table>

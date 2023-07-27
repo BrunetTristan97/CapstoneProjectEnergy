@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth } from '../firebase'
+import axios, { Axios } from 'axios';
 
 const AuthContext = React.createContext()
 
@@ -10,7 +11,32 @@ export function useAuth(){
 export  function AuthProvider({children}) {
 
     const [currentUser, setCurrentUser] = useState()
+    const [error, setError] = useState('')
+    const [firstData_id, setFirstData_id] = useState('')
+    const [size, setSize] = useState('')
     const [loading, setLoading] = useState(true)
+    const [prediction, setPrediction] = useState({});
+    const [data, setData] = useState({});
+
+    function getData(firstData_id, size) {
+      // faire  la foction de recuperatio du lo a predire
+
+      setData({})
+    }
+
+    const  makePrediction = async (event) => {
+      event.preventDefault();
+
+      try {
+        setError('')
+        const response = await axios.post('https://votre-api.com/predict', data);
+        setPrediction(response.data.prediction);
+      } catch (error) {
+        setError('Erreur lors de la prédiction:')
+      }
+      
+    }
+
 
     function signup(email, password){
         return auth.createUserWithEmailAndPassword(email,password)

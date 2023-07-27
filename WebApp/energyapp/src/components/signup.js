@@ -38,7 +38,7 @@ export default function Signup() {
    
   return (
     <ConnectionBody>
-      <Card>
+      <Card className="shadow">
         <Card.Body>
             <h2 className="text-center mb-4">Enregistrez vous</h2>
             {error && <Alert variant="danger">{error}</Alert>}
