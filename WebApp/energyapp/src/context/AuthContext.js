@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { auth } from '../firebase'
-import axios, { Axios } from 'axios';
 
 const AuthContext = React.createContext()
 
@@ -11,31 +10,10 @@ export function useAuth(){
 export  function AuthProvider({children}) {
 
     const [currentUser, setCurrentUser] = useState()
-    const [error, setError] = useState('')
-    const [firstData_id, setFirstData_id] = useState('')
-    const [size, setSize] = useState('')
     const [loading, setLoading] = useState(true)
-    const [prediction, setPrediction] = useState({});
-    const [data, setData] = useState({});
 
-    function getData(firstData_id, size) {
-      // faire  la foction de recuperatio du lo a predire
+  
 
-      setData({})
-    }
-
-    const  makePrediction = async (event) => {
-      event.preventDefault();
-
-      try {
-        setError('')
-        const response = await axios.post('https://votre-api.com/predict', data);
-        setPrediction(response.data.prediction);
-      } catch (error) {
-        setError('Erreur lors de la prédiction:')
-      }
-      
-    }
 
 
     function signup(email, password){
@@ -72,17 +50,17 @@ export  function AuthProvider({children}) {
         return unsuscribe
     }, [])
 
-    const appName = ["Prediction de l' etat de votre machine a laver","Prediction de l' état de votre Poele électrique","Prediction de l' état de votre Télévision"]
+    const appName = ["Prediction sur les données du DRED","Prediction sur les données du QUD","Prediction sur les données du SIM"]
 
     const value = {
-        currentUser,
         login,
         logout,
         signup,
         resetPassword,
         updateEmail,
         updatePassworld,
-        appName
+        currentUser,
+        appName,
 
     }
   return (

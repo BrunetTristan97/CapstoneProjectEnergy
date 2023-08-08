@@ -21,7 +21,7 @@ export default function Login() {
             setError('')
             setLoading(true)
             await login(emailRef.current.value, passwordRef.current.value )
-            history('/Appareils/1')
+            history('/Appareils/0')
         
         } catch (error) {
             setError('Erreur lors de la connection')

@@ -36,12 +36,12 @@ const Menu = () => {
         <div className="col-8 d-flex justify-content-center">
           <Navbar.Collapse id="navbarSupportedContent">
             <Nav className="mr-auto">
-            <NavDropdown title="Mes appareils" id="navbarDropdown">
-                <NavDropdown.Item href="/Appareils/0">Machine à laver</NavDropdown.Item>
+            <NavDropdown title="Liste des  données" id="navbarDropdown">
+                <NavDropdown.Item href="/Appareils/0">DRED</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/Appareils/1">Poele electrique</NavDropdown.Item>
+                <NavDropdown.Item href="/Appareils/1">QUD</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/Appareils/2">Télévision</NavDropdown.Item>
+                <NavDropdown.Item href="/Appareils/2">SIM</NavDropdown.Item>
               </NavDropdown>
               <Nav.Link href="/Dashboard">Tableau de bord</Nav.Link>
               <Nav.Link href="/majProfile">Profil</Nav.Link>
