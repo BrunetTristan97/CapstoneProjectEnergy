@@ -5,18 +5,17 @@ import {  Card } from 'react-bootstrap'
 export default function VisuelPrediction({ textToDisplay, data }) {
 
   
-  const [showTable, setShowTable] = useState(false);
+  const [ShowPrediction, setShowPrediction] = useState(false);
   const [inputValue, setInputValue] = useState(10);
   const [lastData, setLastData] = useState([]);
 
   useEffect(() => {
     const lastElements = data.slice(-inputValue); // Obtenez les derniers éléments en fonction de inputValue
-    debugger
     setLastData(lastElements);
   }, [inputValue, data]);
 
   const handleClick = () => {
-    setShowTable(!showTable);
+    setShowPrediction(!ShowPrediction);
   };
   const handleInputChange = (event) => {
     setInputValue(event.target.value); // Mettre à jour la valeur de l'input
@@ -46,15 +45,48 @@ export default function VisuelPrediction({ textToDisplay, data }) {
           </div>
         </div>
         < div>
-            <table class="table">
-              <thead class="thead-dark">
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Occupation</th>
-                  <th scope="col">consomation a l'instant (t)</th>
-                </tr>
-              </thead>
-              <tbody>
+        
+        {ShowPrediction ? (
+              <div>
+                {/* Code pour afficher le tableau des prédictions */}
+                <table className="table">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Interval de Prédiction</th>
+                      <th scope="col">Resultat ML</th>
+                      <th scope="col">Resultat DML</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {/* Remplacez les données de l'exemple par vos données de prédiction */}
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Prédiction 1</td>
+                      <td>resultat ML 1</td>
+                      <td>resultat DML 1</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Prédiction 2</td>
+                      <td>resultat ML 2</td>
+                      <td>resultat DML 2</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div>
+                {/* Code pour afficher le tableau des données */}
+                <table className="table">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Occupation</th>
+                      <th scope="col">consomation a l'instant (t)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {lastData.map((item, index) => (
                       <tr key={index}>
                         <th scope="row">{index + 1}</th>
@@ -63,7 +95,9 @@ export default function VisuelPrediction({ textToDisplay, data }) {
                       </tr>
                     ))}
                   </tbody>
-            </table>
+                </table>
+              </div>
+            )}
         </div>
           
         </div>
